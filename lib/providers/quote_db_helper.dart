@@ -43,6 +43,9 @@ class QuoteDatabaseHelper {
     List<String> pain = emotionList[2]["quotes"];
     List<String> confusion = emotionList[3]["quotes"];
     List<String> boredom = emotionList[4]["quotes"];
+    List<String> sadness = emotionList[5]["quotes"];
+    List<String> surprise = emotionList[6]["quotes"];
+    List<String> horror = emotionList[7]["quotes"];
 
     angry.forEach((element) async {
       String query = (element.contains("'")) ? "INSERT INTO $tableName($colName) VALUES ('When you have a dream, you have got to grab it and never let go');" : "INSERT INTO $tableName($colName) VALUES ('$element');";
@@ -61,6 +64,18 @@ class QuoteDatabaseHelper {
       await db!.rawInsert(query);
     });
     boredom.forEach((element) async {
+      String query = (element.contains("'")) ? "INSERT INTO $tableName($colName) VALUES ('When you have a dream, you have got to grab it and never let go');" : "INSERT INTO $tableName($colName) VALUES ('$element');";
+      await db!.rawInsert(query);
+    });
+    sadness.forEach((element) async {
+      String query = (element.contains("'")) ? "INSERT INTO $tableName($colName) VALUES ('When you have a dream, you have got to grab it and never let go');" : "INSERT INTO $tableName($colName) VALUES ('$element');";
+      await db!.rawInsert(query);
+    });
+    surprise.forEach((element) async {
+      String query = (element.contains("'")) ? "INSERT INTO $tableName($colName) VALUES ('When you have a dream, you have got to grab it and never let go');" : "INSERT INTO $tableName($colName) VALUES ('$element');";
+      await db!.rawInsert(query);
+    });
+    horror.forEach((element) async {
       String query = (element.contains("'")) ? "INSERT INTO $tableName($colName) VALUES ('When you have a dream, you have got to grab it and never let go');" : "INSERT INTO $tableName($colName) VALUES ('$element');";
       await db!.rawInsert(query);
     });
@@ -162,9 +177,55 @@ class QuoteDatabaseHelper {
       }
       return returnDataList;
     }
+    else if(mood == "Sadness") {
+      final sadness = List.generate(1, (index) => quoteData.map((e) => e).toList());
+
+      final sadnessQuoteList = [];
+      for(int i = 124; i<= 147; i++)
+      {
+        sadnessQuoteList.add(sadness[0][i]);
+
+      }
+      for(int i = 0; i<= 15; i++)
+      {
+        returnDataList.add(sadnessQuoteList[randomNumbers[i]]);
+      }
+      return returnDataList;
+    }
+    else if(mood == "Surprise") {
+      final surprise = List.generate(1, (index) => quoteData.map((e) => e).toList());
+
+      final surpriseQuoteList = [];
+      for(int i = 148; i<= 169; i++)
+      {
+        surpriseQuoteList.add(surprise[0][i]);
+
+      }
+      for(int i = 0; i<= 15; i++)
+      {
+        returnDataList.add(surpriseQuoteList[randomNumbers[i]]);
+      }
+      return returnDataList;
+    }
+    else if(mood == "Horror") {
+      final horror = List.generate(1, (index) => quoteData.map((e) => e).toList());
+
+      final horrorQuoteList = [];
+      for(int i = 170; i<= 190; i++)
+      {
+        horrorQuoteList.add(horror[0][i]);
+
+      }
+      for(int i = 0; i<= 15; i++)
+      {
+        returnDataList.add(horrorQuoteList[randomNumbers[i]]);
+      }
+      return returnDataList;
+    }
 
     return quoteData;
   }
+
 
   Future<int> deleteAllData() async {
     db = await initDatabase();

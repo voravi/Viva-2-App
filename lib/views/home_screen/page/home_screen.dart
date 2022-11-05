@@ -7,6 +7,7 @@ import 'dart:developer';
 
 import '../../../utils/colours.dart';
 
+// ignore: must_be_immutable
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.mood}) : super(key: key);
 
