@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<Quotes>> res;
   List<Quotes> quotes = [];
+  List<List<Quotes>> preQuoteList = [];
 
   mySetState() async {
     await Future.delayed(const Duration(seconds: 3), () async {
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
     res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
     log(res.toString(), name: "Success");
   }
+  String logs = "Log";
 
   deley10Sec() async {
     await Future.delayed(
@@ -44,12 +46,15 @@ class _HomePageState extends State<HomePage> {
       () async {
         res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
         quotes = await res;
+
+        preQuoteList.add(quotes);
         setState(() {});
         deley10Sec();
       },
     );
-        quotes = [];
+    quotes = [];
   }
+
 
   @override
   void initState() {
@@ -63,8 +68,62 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        backgroundColor: gradient1,
+      drawer: Container(
+        width: MediaQuery.of(context).size.width * 0.6,
+        child: Drawer(
+          backgroundColor: gradient1,
+          child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Center(
+                  child: Container(
+                    height: 110,
+                    width: 110,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        "R",
+                        style: TextStyle(color: gradient1, fontWeight: FontWeight.bold, fontSize: 40),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 520,
+                width: double.infinity,
+                child: ListView.builder(
+                  itemCount: preQuoteList.length,
+                  itemBuilder: (context, i) {
+                    return ListTile(
+                      title: Text(
+                        'Previus ${i +1}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      onTap: () {
+                        quotes = preQuoteList[i];
+                        setState(() {});
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       key: _scaffoldKey,
       body: Container(
