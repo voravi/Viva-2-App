@@ -1,75 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:viva_two_final_app/modals/quotes.dart';
-import 'package:viva_two_final_app/providers/quote_db_helper.dart';
-import 'package:viva_two_final_app/utils/globals.dart';
-import 'package:viva_two_final_app/views/previus_quote.dart';
-import 'dart:developer';
 
-import '../../../utils/colours.dart';
+import '../utils/colours.dart';
+import 'home_screen/page/home_screen.dart';
 
-List<List<Quotes>> preQuoteList = [];
-
-// ignore: must_be_immutable
-class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.mood}) : super(key: key);
+class PreviousQuotePage extends StatefulWidget {
+  PreviousQuotePage({Key? key, required this.mood,required this.index}) : super(key: key);
 
   String mood;
+  int index;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<PreviousQuotePage> createState() => _PreviousQuotePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PreviousQuotePageState extends State<PreviousQuotePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  static bool data = true;
-  late Future<List<Quotes>> res;
-  List<Quotes> quotes = [];
-
-  mySetState() async {
-    await Future.delayed(const Duration(seconds: 3), () async {
-      quotes = await res;
-
-      setState(() {});
-      mySetState();
-    });
-  }
-
-  initDatabase() async {
-    await QuoteDatabaseHelper.quoteDatabaseHelper.deleteAllData();
-    await QuoteDatabaseHelper.quoteDatabaseHelper.insertData(emotionList: emotionQuotes);
-    res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
-    // log(res.toString(), name: "Success");
-  }
-
-  deley10Sec() async {
-    log(data.toString(), name: "data befour Function");
-    if (data == true) {
-      await Future.delayed(
-        Duration(seconds: 11),
-        () async {
-          res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
-          quotes = await res;
-          preQuoteList.add(quotes);
-          setState(() {});
-          quotes = [];
-          deley10Sec();
-        },
-      );
-    } else {
-      log(data.toString(), name: "data in else");
-      setState(() {});
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    initDatabase();
-    mySetState();
-    deley10Sec();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,16 +84,9 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       onTap: () {
-                        data = false;
-                        Navigator.pop(context);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PreviousQuotePage(mood: "${widget.mood}",index: i),
-                            ));
-                        setState(() {});
 
-                        log(data.toString(), name: "data in LIstTile");
+                        Navigator.pop(context);
+                        setState(() {});
                       },
                     );
                   },
@@ -179,17 +117,16 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Builder(
-                    builder: (context) => InkWell(
+                   InkWell(
                       onTap: () {
-                        Scaffold.of(context).openDrawer();
+                        Navigator.pop(context);
                       },
-                      child: Image.asset(
-                        "assets/images/drawer.png",
+                      child: Icon(
+                        Icons.arrow_back_ios_rounded,
                         color: Colors.white,
                       ),
                     ),
-                  ),
+
                   Text(
                     "${widget.mood} Quotes..✌",
                     style: TextStyle(
@@ -215,44 +152,33 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 610,
                 width: 320,
-                child: (quotes.isEmpty && quotes.length < 15)
-                    ? Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
+                child: ListView.builder(
+                  itemCount: 15,
+                  itemBuilder: (context, i) {
+                    return Container(
+                      padding: EdgeInsets.only(top: 25, bottom: 25, right: 15, left: 15),
+                      margin: EdgeInsets.only(bottom: 30),
+                      decoration: BoxDecoration(
                           color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.7),
+                          )),
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          preQuoteList[widget.index][i].quote,
+                          style: TextStyle(
+                            color: Colors.white,
+                            wordSpacing: 1,
+                            letterSpacing: 2,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: 15,
-                        itemBuilder: (context, i) {
-                          return Container(
-                            padding: EdgeInsets.only(top: 25, bottom: 25, right: 15, left: 15),
-                            margin: EdgeInsets.only(bottom: 30),
-                            decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.7),
-                                )),
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                quotes[i].quote,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  wordSpacing: 1,
-                                  letterSpacing: 2,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          );
-                        },
                       ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
