@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         onTap: () {
-                          //deley10Sec();
+                          deley10Sec();
                         },
                         child: Row(
                           children: [

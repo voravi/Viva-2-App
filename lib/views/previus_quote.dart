@@ -51,19 +51,7 @@ class _PreviousQuotePageState extends State<PreviousQuotePage> {
                       SizedBox(
                         height: 14,
                       ),
-                      InkWell(
-                        onTap: () {
-                          //deley10Sec();
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              'Home',
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
-                            ),
-                          ],
-                        ),
-                      )
+
                     ],
                   ),
                 ),
