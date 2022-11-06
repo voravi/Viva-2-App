@@ -39,20 +39,30 @@ class _HomePageState extends State<HomePage> {
     log(res.toString(), name: "Success");
   }
   String logs = "Log";
-
-  deley10Sec() async {
-    await Future.delayed(
-      Duration(seconds: 11),
-      () async {
-        res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
-        quotes = await res;
-
-        preQuoteList.add(quotes);
-        setState(() {});
-        deley10Sec();
-      },
-    );
-    quotes = [];
+  bool flag = true;
+  deley10Sec({required bool data}) async {
+    log(data.toString(),name: "Data");
+    if(data == true)
+      {
+        await Future.delayed(
+          Duration(seconds: 11),
+              () async {
+            res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
+            quotes = await res;
+            preQuoteList.add(quotes);
+            // preQuoteList.forEach((element) {
+            // log(element[0].quote,name: "Quote 1");
+            // log(element[1].quote,name: "Quote 2");
+            // log(element[2].quote,name: "Quote 3");
+            // log(element[3].quote,name: "Quote 4");
+            // });
+            setState(() {});
+            deley10Sec(data: true);
+          },
+        );
+        quotes = [];
+      }
+    
   }
 
 
@@ -62,7 +72,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     initDatabase();
     mySetState();
-    deley10Sec();
+    deley10Sec(data: true);
   }
 
   @override
@@ -81,19 +91,34 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.blue,
                 ),
                 child: Center(
-                  child: Container(
-                    height: 110,
-                    width: 110,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        "R",
-                        style: TextStyle(color: gradient1, fontWeight: FontWeight.bold, fontSize: 40),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            "R",
+                            style: TextStyle(color: gradient1, fontWeight: FontWeight.bold, fontSize: 40),
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 14,),
+                      InkWell(
+                        onTap: (){
+                          deley10Sec(data: true);
+                        },
+                        child: Row(
+                          children: [
+                            Text('Home',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -113,7 +138,13 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       onTap: () {
-                        quotes = preQuoteList[i];
+                        quotes = [];
+                        quotes.addAll(preQuoteList[i]);
+                        log(quotes.toString(),name: "Quote LIst");
+                        log(quotes[0].quote.toString(),name: "Quote ele 1");
+                        log(quotes[1].quote.toString(),name: "Quote ele 2");
+                        log(quotes[2].quote.toString(),name: "Quote ele 3");
+                        deley10Sec(data: false);
                         setState(() {});
                         Navigator.pop(context);
                       },
