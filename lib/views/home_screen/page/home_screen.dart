@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  static bool data = true;
   late Future<List<Quotes>> res;
   List<Quotes> quotes = [];
   List<List<Quotes>> preQuoteList = [];
@@ -38,33 +39,32 @@ class _HomePageState extends State<HomePage> {
     res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
     log(res.toString(), name: "Success");
   }
-  String logs = "Log";
-  bool flag = true;
-  deley10Sec({required bool data}) async {
-    log(data.toString(),name: "Data");
-    if(data == true)
-      {
-        await Future.delayed(
-          Duration(seconds: 11),
-              () async {
-            res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
-            quotes = await res;
-            preQuoteList.add(quotes);
-            // preQuoteList.forEach((element) {
-            // log(element[0].quote,name: "Quote 1");
-            // log(element[1].quote,name: "Quote 2");
-            // log(element[2].quote,name: "Quote 3");
-            // log(element[3].quote,name: "Quote 4");
-            // });
-            setState(() {});
-            deley10Sec(data: true);
-          },
-        );
-        quotes = [];
-      }
-    
-  }
 
+  String logs = "Log";
+
+  deley10Sec() async {
+    if (data == true) {
+      await Future.delayed(
+        Duration(seconds: 11),
+        () async {
+          res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
+          quotes = await res;
+          preQuoteList.add(quotes);
+          // preQuoteList.forEach((element) {
+          // log(element[0].quote,name: "Quote 1");
+          // log(element[1].quote,name: "Quote 2");
+          // log(element[2].quote,name: "Quote 3");
+          // log(element[3].quote,name: "Quote 4");
+          // });
+          setState(() {});
+          quotes = [];
+          deley10Sec();
+        },
+      );
+    } else {
+      setState(() {});
+    }
+  }
 
   @override
   void initState() {
@@ -72,13 +72,13 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     initDatabase();
     mySetState();
-    deley10Sec(data: true);
+    deley10Sec();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Container(
+      drawer: SizedBox(
         width: MediaQuery.of(context).size.width * 0.6,
         child: Drawer(
           backgroundColor: gradient1,
@@ -107,14 +107,19 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 14,),
+                      SizedBox(
+                        height: 14,
+                      ),
                       InkWell(
-                        onTap: (){
-                          deley10Sec(data: true);
+                        onTap: () {
+                          deley10Sec();
                         },
                         child: Row(
                           children: [
-                            Text('Home',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),),
+                            Text(
+                              'Home',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
                           ],
                         ),
                       )
@@ -122,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 520,
                 width: double.infinity,
                 child: ListView.builder(
@@ -130,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, i) {
                     return ListTile(
                       title: Text(
-                        'Previus ${i +1}',
+                        'Previus ${i + 1}',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -140,13 +145,13 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         quotes = [];
                         quotes.addAll(preQuoteList[i]);
-                        log(quotes.toString(),name: "Quote LIst");
-                        log(quotes[0].quote.toString(),name: "Quote ele 1");
-                        log(quotes[1].quote.toString(),name: "Quote ele 2");
-                        log(quotes[2].quote.toString(),name: "Quote ele 3");
-                        deley10Sec(data: false);
-                        setState(() {});
+                        log(quotes.toString(), name: "Quote List");
+                        log(quotes[0].quote.toString(), name: "Quote ele 1");
+                        log(quotes[1].quote.toString(), name: "Quote ele 2");
+                        log(quotes[2].quote.toString(), name: "Quote ele 3");
                         Navigator.pop(context);
+                        data = false;
+                        deley10Sec();
                       },
                     );
                   },
