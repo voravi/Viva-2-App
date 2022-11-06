@@ -110,11 +110,13 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           data = true;
                           deley10Sec();
+                          Navigator.pop(context);
                         },
                         child: Row(
+                          mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
-                              'Home',
+                              'Refresh Again',
                               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                             ),
                           ],
