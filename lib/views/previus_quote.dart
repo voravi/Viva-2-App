@@ -141,28 +141,48 @@ class _PreviousQuotePageState extends State<PreviousQuotePage> {
                 height: 610,
                 width: 320,
                 child: ListView.builder(
-                  itemCount: 15,
+                  itemCount: 1,
                   itemBuilder: (context, i) {
                     return Container(
-                      padding: EdgeInsets.only(top: 25, bottom: 25, right: 15, left: 15),
-                      margin: EdgeInsets.only(bottom: 30),
-                      decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.7),
-                          )),
-                      width: double.infinity,
-                      child: Center(
-                        child: Text(
-                          preQuoteList[widget.index][i].quote,
-                          style: TextStyle(
-                            color: Colors.white,
-                            wordSpacing: 1,
-                            letterSpacing: 2,
+                      height: 540,
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(top: 28, bottom: 28, right: 17, left: 17),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: Colors.white.withOpacity(0.3)),
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: Offset(8, 8),
+                                  blurRadius: 50,
+                                  spreadRadius: 5,
+                                  color: Colors.white.withOpacity(0.2),
+                                ),
+                              ],
+                              gradient: RadialGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.3),
+                                  Colors.grey.withOpacity(0.3),
+                                ],
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                preQuoteList[widget.index].quote,
+                                style: TextStyle(
+                                  fontSize: 27,
+                                  color: Colors.white,
+                                  wordSpacing: 1,
+                                  letterSpacing: 2,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
+                        ],
                       ),
                     );
                   },

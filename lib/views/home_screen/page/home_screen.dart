@@ -5,10 +5,9 @@ import 'package:viva_two_final_app/providers/quote_db_helper.dart';
 import 'package:viva_two_final_app/utils/globals.dart';
 import 'package:viva_two_final_app/views/previus_quote.dart';
 import 'dart:developer';
-
 import '../../../utils/colours.dart';
 
-List<List<Quotes>> preQuoteList = [];
+List<Quotes> preQuoteList = [];
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -29,7 +28,6 @@ class _HomePageState extends State<HomePage> {
   mySetState() async {
     await Future.delayed(const Duration(seconds: 3), () async {
       quotes = await res;
-
       setState(() {});
       mySetState();
     });
@@ -50,7 +48,7 @@ class _HomePageState extends State<HomePage> {
         () async {
           res = QuoteDatabaseHelper.quoteDatabaseHelper.fetchAllData(mood: widget.mood);
           quotes = await res;
-          preQuoteList.add(quotes);
+          preQuoteList.add(quotes[0]);
           setState(() {});
           quotes = [];
           deley10Sec();
@@ -117,7 +115,11 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Text(
                               'Refresh Again',
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
                             ),
                           ],
                         ),
@@ -147,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PreviousQuotePage(mood: "${widget.mood}",index: i),
+                              builder: (context) => PreviousQuotePage(mood: "${widget.mood}", index: i),
                             ));
                         setState(() {});
 
@@ -230,28 +232,48 @@ class _HomePageState extends State<HomePage> {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: 15,
+                        itemCount: 1,
                         itemBuilder: (context, i) {
                           return Container(
-                            padding: EdgeInsets.only(top: 25, bottom: 25, right: 15, left: 15),
-                            margin: EdgeInsets.only(bottom: 30),
-                            decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.7),
-                                )),
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                quotes[i].quote,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  wordSpacing: 1,
-                                  letterSpacing: 2,
+                            height: 540,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.only(top: 25, bottom: 25, right: 15, left: 15),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                    border: Border.all(color: Colors.white.withOpacity(0.3)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: Offset(8, 8),
+                                        blurRadius: 50,
+                                        spreadRadius: 5,
+                                        color: Colors.white.withOpacity(0.2),
+                                      ),
+                                    ],
+                                    gradient: RadialGradient(
+                                      colors: [
+                                        Colors.white.withOpacity(0.3),
+                                        Colors.grey.withOpacity(0.3),
+                                      ],
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      quotes[i].quote,
+                                      style: TextStyle(
+                                        fontSize: 28,
+                                        color: Colors.white,
+                                        wordSpacing: 1,
+                                        letterSpacing: 2,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
+                              ],
                             ),
                           );
                         },
